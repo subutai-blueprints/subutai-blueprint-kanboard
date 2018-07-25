@@ -2,9 +2,9 @@
   remote_user: root
   vars:
       db_name: kanboard 
-      domain_name: mediawiki.envs.subutai.cloud
-      admin_user: admin
-      admin_pwd: topsecret
+      domain_name: "{{ domain_name_var }}"
+      admin_user: "{{ admin_user }}"
+      admin_pwd: "{{ admin_pwd_var }}"
       kan_version: 1.2.5
       
   tasks: 
