@@ -41,14 +41,14 @@
       unarchive:
           remote_src: yes
           src:  /tmp/kanboard.tgz
-          dest: /var/www
+          dest: /var/www/html
           owner: www-data
           group: www-data
 
     - name: Copy app config file
       copy:
           src: config.php
-          dest: "/var/www/kanboard-{{kan_version}}/config.php"
+          dest: "/var/www/html/kanboard-{{kan_version}}/config.php"
 
     - name: Create DataBase User
       mysql_user:
