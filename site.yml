@@ -3,7 +3,7 @@
   vars:
       db_name: kanboard 
       domain_name: "{{ domain_name_var }}"
-      admin_user: "{{ admin_user }}"
+      admin_user: "{{ admin_user_var }}"
       admin_pwd: "{{ admin_pwd_var }}"
       kan_version: 1.2.5
       
@@ -41,14 +41,14 @@
       unarchive:
           remote_src: yes
           src:  /tmp/kanboard.tgz
-          dest: /var/www/html
+          dest: /var/www
           owner: www-data
           group: www-data
 
     - name: Copy app config file
-      copy:
+      template:
           src: config.php
-          dest: "/var/www/html/kanboard-{{kan_version}}/config.php"
+          dest: "/var/www/kanboard-{{kan_version}}/config.php"
 
     - name: Create DataBase User
       mysql_user:
@@ -64,15 +64,15 @@
           state: present
 
     - name: Copy apache config file
-      copy:
+      template:
           src: kanboard_site.conf
-          dest: /etc/apache2/sites-available/kanboard
+          dest: /etc/apache2/sites-available/kanboard.conf
 
     - name: Enable kanboard site in apache
       file:
           state: link
-          src:  /etc/apache2/sites-available/kanboard
-          dest:  /etc/apache2/sites-enabled/kanboard
+          src:  /etc/apache2/sites-available/kanboard.conf
+          dest:  /etc/apache2/sites-enabled/kanboard.conf
           owner: www-data
           group: www-data
 
@@ -80,6 +80,11 @@
       apache2_module:
         name: rewrite
         state: present
+
+    - name: Remove default site
+      file:
+          state: absent
+          path: /etc/apache2/sites-enabled/000-default.conf
 
     - name: restart apache2 server
       service:
